@@ -20,7 +20,25 @@ public class Interpreter {
     }
 
     public void interpret(String expression) {
+        this.expression = expression;
+        Expression tree = parse(tokenize(expression));
+        if (tree.value.equals("+")) {
+            result = Integer.parseInt(tree.lhe.value) + Integer.parseInt(tree.rhe.value);
+        }
+    }
 
+    private Expression parse(List<String> token) {
+        Expression expr = new Expression();
+        if (token.get(0).matches("-?[0-9]+(.[0-9]+)?")) {
+            if (token.get(1).matches("[\\+\\-\\*/]")) {
+                expr.value = token.get(1);
+                expr.lhe = new Expression(token.get(0));
+                if (token.get(2).matches("-?[0-9]+(.[0-9]+)?")) {
+                    expr.rhe = new Expression(token.get(2));
+                }
+            }
+        }
+        return expr;
     }
 
     private List<String> tokenize(String expression) {
