@@ -16,10 +16,12 @@ public class Logger {
 
     public void print(PrintStream stream) {
         stream.println();
-        stream.println();
-        for (String info : log) {
-            stream.println(info);
+        if (log.isEmpty()) {
+            stream.println("Passed!");
+        } else {
+            stream.println("Failed.");
         }
+        log.forEach(stream::println);
     }
 
     public Logger() {
