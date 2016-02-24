@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Michael Dorst
  */
-public class Logger {
+public class TestLogger {
     private List<String> log;
 
     public void log(String info) {
@@ -24,7 +24,7 @@ public class Logger {
         log.forEach(stream::println);
     }
 
-    public Logger() {
+    public TestLogger() {
         log = new LinkedList<>();
     }
 }
