@@ -8,10 +8,18 @@ import java.util.StringTokenizer;
  * Michael Dorst
  */
 public class Interpreter {
-
+    /**
+     * The expression to be evaluated
+     */
     private String expression;
+    /**
+     * The result of of interpret() will be stored here
+     */
     private int result;
 
+    /**
+     * Accessors
+     */
     public String expression() {
         return expression;
     }
@@ -19,6 +27,10 @@ public class Interpreter {
         return result;
     }
 
+    /**
+     * Takes an expression, stores it, then interprets it and stores the result.
+     * @param expression The expression to be stored and interpreted
+     */
     public void interpret(String expression) {
 
     }
