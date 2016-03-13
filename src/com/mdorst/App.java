@@ -1,21 +1,18 @@
 package com.mdorst;
 
-import com.mdorst.util.TestLogger;
+import com.mdorst.util.TestRunner;
 
-/**
- * Michael Dorst
- */
 public class App {
-    private TestLogger tests;
+    private TestRunner tests;
 
     public void main() {
         Interpreter interpreter = new Interpreter();
         interpreter.interpret("1 + 2");
-        tests.expect(interpreter, 3);
-        tests.finalize(System.out);
+        tests.assertEqual(interpreter.result(), 3, "result");
+        tests.done();
     }
 
     public App() {
-        tests = new TestLogger();
+        tests = new TestRunner();
     }
 }
