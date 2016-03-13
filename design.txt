@@ -1,0 +1,59 @@
+LinkedList    ---   is a   --- java.util.Collection
+LinkedList    --- has many --- Node
+LinkedList    ---   uses   --- Iterator
+Iterator      ---   is a   --- java.util.Iterator
+Iterator      ---   has a  --- Node
+Queue         ---   is a   --- LinkedList
+Stack         ---   is a   --- LinkedList
+
+E : Generic
+
+Node
+ + Node()
+ + Node(E)
+ + delete()
+ + data : E
+ + next : Node
+ + prev : Node
+
+Iterator
+ ~ Iterator(Node)
+ + hasNext() : Boolean
+ + next() : E
+ + remove()
+ - head : Node
+ - node : Node
+
+LinkedList
+ + LinkedList()
+ + LinkedList(LinkedList)
+ + add(E) : Boolean
+ + addAll(Collection) : Boolean
+ + clear()
+ + contains(Object) : Boolean
+ + containsAll(Collection) : Boolean
+ + isEmpty() : Boolean
+ + iterator() : Iterator
+ + remove(Object) : Boolean
+ + removeAll(Collection) : Boolean
+ + retainAll(Collection) : Boolean
+ + size() : Integer
+ + toArray() : Object[]
+ + toArray(T[]) : T[]
+ + toString() : String
+ # head : Node
+ # size : Integer
+
+Queue
+ + Queue()
+ + Queue(LinkedList)
+ + dequeue() : E
+ + enqueue(E)
+ + front() : E
+
+Stack
+ + Stack()
+ + Stack(LinkedList)
+ + pop() : E
+ + push(E)
+ + top() : E
