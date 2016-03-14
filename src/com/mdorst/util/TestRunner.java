@@ -38,10 +38,14 @@ public class TestRunner {
                 log.add(Color.GREEN + expectation + Color.RESET);
             passCount++;
         } else {
-            stream.print(Color.RED + "F" + Color.RESET);
-            log.add(Color.RED + expectation + Color.RESET);
-            failCount++;
+            fail(expectation);
         }
+    }
+
+    public void fail(String failure) {
+        stream.print(Color.RED + "F" + Color.RESET);
+        log.add(Color.RED + failure + Color.RESET);
+        failCount++;
     }
 
     public void assertTrue(boolean assertion, String expression) {
