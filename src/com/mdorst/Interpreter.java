@@ -29,6 +29,12 @@ public class Interpreter {
         public String name() {
             return name;
         }
+        public Token call(Token op1, Token op2) {
+            return operators.get(name).call(op1, op2);
+        }
+        public boolean isOperator() {
+            return name != null && operators.get(name) != null;
+        }
         @Override
         public String toString() {
             if (name == null) {
@@ -145,20 +151,32 @@ public class Interpreter {
          */
         Stack<Token> eval = new Stack<>();
         while (!postfix.isEmpty()) {
-            eval.push(postfix.dequeue());
-            if (!postfix.isEmpty()) {
+            /**
+             * While there are operands in the postfix queue,
+             * push them to the eval stack
+             */
+            while (!postfix.isEmpty() && !postfix.front().isOperator()) {
                 eval.push(postfix.dequeue());
-                try {
-                    Token rightOp = eval.pop();
-                    Token leftOp = eval.pop();
-                    Operator operator = operators.get(postfix.dequeue().name);
-                    eval.push(operator.call(leftOp, rightOp));
-                } catch (NullPointerException e) {
-                    /**
-                     * One of the operands wasn't in the symbol table.
-                     */
-                    throw new InvalidExpressionException(expr + " is not a valid expression.");
-                }
+            }
+            /**
+             * If the postfix queue is not empty and there
+             * are less than two operands in the eval stack
+             * at this point, then the expression is not valid.
+             * An exception will be thrown.
+             */
+            if (!postfix.isEmpty() && eval.size() < 2) {
+                throw new InvalidExpressionException(expression + " is not a valid expression");
+            }
+            /**
+             * While there is more than one operand on the eval stack,
+             * pop the top two and operate on them using the next
+             * operator in the postfix queue.
+             */
+            while (eval.size() > 1) {
+                Token rightOperand = eval.pop();
+                Token leftOperand = eval.pop();
+                Token operator = postfix.dequeue();
+                eval.push(operator.call(leftOperand, rightOperand));
             }
         }
         return eval.pop().value();
