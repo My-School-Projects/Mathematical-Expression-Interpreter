@@ -5,14 +5,21 @@ import com.mdorst.util.TestRunner;
 
 public class Main {
 
+    static TestRunner test = new TestRunner();
+    static Interpreter interpreter = new Interpreter();
+
     public static void main(String[] args) {
-        TestRunner test = new TestRunner();
-        Interpreter interpreter = new Interpreter();
+        test.verbose = true;
+        test("2 + 3", 5);
+        test("5 * 3 + 2 * 8", 31);
+        test.done();
+    }
+
+    public static void test(String s, double expectation) {
         try {
-            test.assertEqual(interpreter.interpret("1 + + 2"), 3.0, "interpret()");
+            test.assertEqual(interpreter.interpret(s), expectation, s);
         } catch (InvalidExpressionException e) {
             System.out.println(e.getMessage());
         }
-        test.done();
     }
 }
