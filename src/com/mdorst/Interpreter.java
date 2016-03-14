@@ -39,6 +39,10 @@ public class Interpreter {
         }
     }
 
+    /**
+     * Standard interface for all operators.
+     * Allows operators to be stored in a HashMap
+     */
     private interface Operator {
         Token call(Token op1, Token op2);
     }
@@ -56,6 +60,9 @@ public class Interpreter {
      */
     private HashMap<String, Double> symbols;
 
+    /**
+     * Sets up operators to be accessed via string identifiers.
+     */
     public Interpreter() {
         operators.add("+", (op1, op2) -> new Token(op1.value + op2.value));
         priority .add("+", 3);
