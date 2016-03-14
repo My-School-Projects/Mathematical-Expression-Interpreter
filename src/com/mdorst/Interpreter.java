@@ -4,6 +4,7 @@ import com.mdorst.container.hash.HashMap;
 import com.mdorst.container.list.LinkedList;
 import com.mdorst.container.list.Queue;
 import com.mdorst.container.list.Stack;
+import com.mdorst.exception.InvalidExpressionException;
 
 import java.util.StringTokenizer;
 
@@ -27,6 +28,14 @@ public class Interpreter {
         }
         public String name() {
             return name;
+        }
+        @Override
+        public String toString() {
+            if (name == null) {
+                return Double.toString(value);
+            } else {
+                return name;
+            }
         }
     }
 
@@ -68,7 +77,7 @@ public class Interpreter {
      * @param expression The expression to be interpreted
      * @return The result of the expression
      */
-    public double interpret(String expression) {
+    public double interpret(String expression) throws InvalidExpressionException {
         LinkedList<Token> expr = new LinkedList<>();
         /**
          * Tokenize the expression
@@ -125,8 +134,8 @@ public class Interpreter {
                 /**
                  * Either one of the operands wasn't in the symbol table,
                  * or there were not enough operands provided
-                 * TODO: Throw an exception
                  */
+                throw new InvalidExpressionException(expr + " is not a valid expression.");
             }
         }
         return result.value;
