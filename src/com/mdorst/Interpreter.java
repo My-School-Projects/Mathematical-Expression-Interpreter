@@ -40,8 +40,7 @@ public class Interpreter {
     }
 
     /**
-     * Standard interface for all operators.
-     * Allows operators to be stored in a HashMap
+     * Standard interface for all operations (+, -, *, etc.)
      */
     private interface Operation {
         Token call(Token op1, Token op2);
