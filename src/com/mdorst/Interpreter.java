@@ -72,7 +72,7 @@ public class Interpreter {
     /**
      * Maps variable names to values.
      */
-    private HashMap<String, Double> symbols;
+    private HashMap<String, Double> symbols = new HashMap<>(String::hashCode);
 
     public Interpreter() {
         /**
@@ -117,7 +117,7 @@ public class Interpreter {
             /**
              * Variables
              */
-            if (token.name.matches("[a-z]\\w+")) {
+            if (token.name.matches("([a-z]|[A-Z]|_)\\w*")) {
                 postfix.enqueue(token);
             } else
             /**
@@ -129,7 +129,7 @@ public class Interpreter {
             /**
              * Operators
              */
-            if (token.name.matches("[\\+\\-*/]")) {
+            if (token.name.matches("[\\+\\-*/=]")) {
                 while (!opStack.isEmpty() &&
                         operators.get(opStack.top().name).priority < operators.get(token.name).priority) {
                     postfix.enqueue(opStack.pop());
@@ -149,7 +149,10 @@ public class Interpreter {
             if (!postfix.isEmpty()) {
                 eval.push(postfix.dequeue());
                 try {
-                    eval.push(operators.get(postfix.dequeue().name).call(eval.pop(), eval.pop()));
+                    Token rightOp = eval.pop();
+                    Token leftOp = eval.pop();
+                    Operator operator = operators.get(postfix.dequeue().name);
+                    eval.push(operator.call(leftOp, rightOp));
                 } catch (NullPointerException e) {
                     /**
                      * One of the operands wasn't in the symbol table.
@@ -158,16 +161,6 @@ public class Interpreter {
                 }
             }
         }
-        while (eval.size() > 1) {
-            try {
-                eval.push(operators.get(eval.pop().name).call(eval.pop(), eval.pop()));
-            } catch (NullPointerException e) {
-                /**
-                 * One of the operands wasn't in the symbol table.
-                 */
-                throw new InvalidExpressionException(expr + " is not a valid expression.");
-            }
-        }
-        return eval.pop().value;
+        return eval.pop().value();
     }
 }
