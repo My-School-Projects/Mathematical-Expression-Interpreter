@@ -75,10 +75,10 @@ public class Interpreter {
      */
     private HashMap<String, Double> symbols;
 
-    /**
-     * Sets up operators to be accessed via string identifiers.
-     */
     public Interpreter() {
+        /**
+         * Set up operators to be accessed via string identifiers.
+         */
         operators.add("+", new Operator(3, (op1, op2) -> new Token(op1.value + op2.value)));
         operators.add("-", new Operator(3, (op1, op2) -> new Token(op1.value - op2.value)));
         operators.add("*", new Operator(2, (op1, op2) -> new Token(op1.value * op2.value)));
