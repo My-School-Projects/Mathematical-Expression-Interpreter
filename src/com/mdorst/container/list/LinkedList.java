@@ -214,7 +214,11 @@ public class LinkedList<E> implements Collection<E> {
         String s = "[";
         for (Node<E> n = head.next; n != head; n = n.next) {
             if (!Objects.equals(s, "[")) s += ", ";
-            s += n.data.toString();
+            if (n.data != null) {
+                s += n.data.toString();
+            } else {
+                s += "null";
+            }
         }
         return s + "]";
     }
