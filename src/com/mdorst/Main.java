@@ -8,7 +8,7 @@ public class Main {
         TestRunner test = new TestRunner();
         Interpreter interpreter = new Interpreter();
         interpreter.interpret("1 + 2");
-        test.assertEqual(interpreter.result(), 3, "result");
+        test.assertEqual(interpreter.interpret("1 + 2"), 3, "interpret()");
         test.done();
     }
 }
