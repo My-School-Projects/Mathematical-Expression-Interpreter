@@ -68,7 +68,7 @@ public class Interpreter {
      * Usage:
      * operators.get("+").call(3, 2) // result: 5
      */
-    private HashMap<String, Operator> operators = new HashMap<>(String::hashCode);
+    private static HashMap<String, Operator> operators;
     /**
      * Maps variable names to values.
      */
@@ -76,16 +76,20 @@ public class Interpreter {
 
     public Interpreter() {
         /**
-         * Set up operators to be accessed via string identifiers.
+         * Set up {@code operators} to be accessed via string identifiers.
+         * Do this only once, upon the first call to this constructor.
          */
-        operators.add("+", new Operator(3, (op1, op2) -> new Token(op1.value + op2.value)));
-        operators.add("-", new Operator(3, (op1, op2) -> new Token(op1.value - op2.value)));
-        operators.add("*", new Operator(2, (op1, op2) -> new Token(op1.value * op2.value)));
-        operators.add("/", new Operator(2, (op1, op2) -> new Token(op1.value / op2.value)));
-        operators.add("=", new Operator(0, (Token op1, Token op2) -> {
-            symbols.add(op1.name, op2.value);
-            return new Token(op2.value);
-        }));
+        if (operators == null) {
+            operators = new HashMap<>(String::hashCode);
+            operators.add("+", new Operator(3, (op1, op2) -> new Token(op1.value + op2.value)));
+            operators.add("-", new Operator(3, (op1, op2) -> new Token(op1.value - op2.value)));
+            operators.add("*", new Operator(2, (op1, op2) -> new Token(op1.value * op2.value)));
+            operators.add("/", new Operator(2, (op1, op2) -> new Token(op1.value / op2.value)));
+            operators.add("=", new Operator(0, (Token op1, Token op2) -> {
+                symbols.add(op1.name, op2.value);
+                return new Token(op2.value);
+            }));
+        }
     }
 
     /**
