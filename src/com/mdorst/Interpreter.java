@@ -43,8 +43,24 @@ public class Interpreter {
      * Standard interface for all operators.
      * Allows operators to be stored in a HashMap
      */
-    private interface Operator {
+    private interface Operation {
         Token call(Token op1, Token op2);
+    }
+
+    private class Operator {
+        private int priority;
+        private Operation operation;
+
+        public Operator(int p, Operation op) {
+            priority = p;
+            operation = op;
+        }
+        public int priority() {
+            return priority;
+        }
+        public Token call(Token op1, Token op2) {
+            return operation.call(op1, op2);
+        }
     }
 
     /**
@@ -54,7 +70,6 @@ public class Interpreter {
      * operators.get("+").call(3, 2) // result: 5
      */
     private HashMap<String, Operator> operators = new HashMap<>(String::hashCode);
-    private HashMap<String, Integer> priority = new HashMap<>(String::hashCode);
     /**
      * Maps variable names to values.
      */
@@ -64,19 +79,14 @@ public class Interpreter {
      * Sets up operators to be accessed via string identifiers.
      */
     public Interpreter() {
-        operators.add("+", (op1, op2) -> new Token(op1.value + op2.value));
-        priority .add("+", 3);
-        operators.add("-", (op1, op2) -> new Token(op1.value - op2.value));
-        priority .add("-", 3);
-        operators.add("*", (op1, op2) -> new Token(op1.value * op2.value));
-        priority .add("*", 2);
-        operators.add("/", (op1, op2) -> new Token(op1.value / op2.value));
-        priority .add("/", 2);
-        operators.add("=", (op1, op2) -> {
+        operators.add("+", new Operator(3, (op1, op2) -> new Token(op1.value + op2.value)));
+        operators.add("-", new Operator(3, (op1, op2) -> new Token(op1.value - op2.value)));
+        operators.add("*", new Operator(2, (op1, op2) -> new Token(op1.value * op2.value)));
+        operators.add("/", new Operator(2, (op1, op2) -> new Token(op1.value / op2.value)));
+        operators.add("=", new Operator(0, (Token op1, Token op2) -> {
             symbols.add(op1.name, op2.value);
             return new Token(op2.value);
-        });
-        priority .add("=", 0);
+        }));
     }
 
     /**
@@ -118,7 +128,7 @@ public class Interpreter {
              */
             if (token.name.matches("[\\+\\-*/]")) {
                 while (!opStack.isEmpty() &&
-                        priority.get(opStack.top().name) < priority.get(token.name)) {
+                        operators.get(opStack.top().name).priority < operators.get(token.name).priority) {
                     postfix.enqueue(opStack.pop());
                 }
                 opStack.push(token);
@@ -130,21 +140,31 @@ public class Interpreter {
         /**
          * Evaluate postfix expression
          */
-        Token result = new Token(0);
+        Stack<Token> eval = new Stack<>();
         while (!postfix.isEmpty()) {
+            eval.push(postfix.dequeue());
+            if (!postfix.isEmpty()) {
+                eval.push(postfix.dequeue());
+                try {
+                    eval.push(operators.get(postfix.dequeue().name).call(eval.pop(), eval.pop()));
+                } catch (NullPointerException e) {
+                    /**
+                     * One of the operands wasn't in the symbol table.
+                     */
+                    throw new InvalidExpressionException(expr + " is not a valid expression.");
+                }
+            }
+        }
+        while (eval.size() > 1) {
             try {
-                Token operand1 = postfix.dequeue();
-                Token operand2 = postfix.dequeue();
-                Token operator = postfix.dequeue();
-                result = operators.get(operator.name).call(operand1, operand2);
+                eval.push(operators.get(eval.pop().name).call(eval.pop(), eval.pop()));
             } catch (NullPointerException e) {
                 /**
-                 * Either one of the operands wasn't in the symbol table,
-                 * or there were not enough operands provided
+                 * One of the operands wasn't in the symbol table.
                  */
                 throw new InvalidExpressionException(expr + " is not a valid expression.");
             }
         }
-        return result.value;
+        return eval.pop().value;
     }
 }
