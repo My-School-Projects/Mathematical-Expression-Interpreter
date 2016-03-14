@@ -1,7 +1,6 @@
 package com.mdorst;
 
 import com.mdorst.container.list.LinkedList;
-import java.util.Collection;
 import java.util.StringTokenizer;
 
 public class Interpreter {
@@ -11,7 +10,7 @@ public class Interpreter {
      * @return The result of the expression
      */
     public int interpret(String expression) {
-        Collection<String> expr = new LinkedList<>();
+        LinkedList<String> expr = new LinkedList<>();
         /**
          * Tokenize the expression
          */
@@ -21,7 +20,7 @@ public class Interpreter {
                 expr.add(tokenizer.nextToken());
             }
         }
-        
+
         return 0;
     }
 }
