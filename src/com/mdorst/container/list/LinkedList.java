@@ -20,6 +20,17 @@ public class LinkedList<E> implements Collection<E> {
         }
     }
 
+    public E get(int index) {
+        Node<E> n = head.next;
+        if (index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        for (int i = 0; i < index; i++) {
+            n = n.next;
+        }
+        return n.data;
+    }
+
     @Override
     public int size() {
         return size;
