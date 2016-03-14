@@ -20,6 +20,14 @@ public class LinkedList<E> implements Collection<E> {
         }
     }
 
+    public LinkedList<E> reverse() {
+        LinkedList<E> reversed = new LinkedList<>();
+        for (Node<E> n = head.prev; n != head; n = n.prev) {
+            reversed.add(n.data);
+        }
+        return reversed;
+    }
+
     public E get(int index) {
         Node<E> n = head.next;
         if (index > size) {
