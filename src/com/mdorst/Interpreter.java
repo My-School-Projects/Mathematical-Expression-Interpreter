@@ -5,6 +5,7 @@ import com.mdorst.container.list.LinkedList;
 import com.mdorst.container.list.Queue;
 import com.mdorst.container.list.Stack;
 import com.mdorst.exception.InvalidExpressionException;
+import com.mdorst.exception.UnrecognizedSymbolError;
 
 import java.util.StringTokenizer;
 
@@ -131,7 +132,7 @@ public class Interpreter {
              */
             if (token.name.matches("\\d+")) {
                 postfix.enqueue(new Token(Double.valueOf(token.name)));
-            }
+            } else
             /**
              * Operators
              */
@@ -141,6 +142,12 @@ public class Interpreter {
                     postfix.enqueue(opStack.pop());
                 }
                 opStack.push(token);
+            } else {
+                /**
+                 * Unrecognized symbol (did not match any recognized pattern)
+                 * An exception will be thrown.
+                 */
+                throw new UnrecognizedSymbolError(token.name + " is not a valid token");
             }
         }
         while (!opStack.isEmpty()) {

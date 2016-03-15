@@ -1,6 +1,7 @@
 package com.mdorst;
 
 import com.mdorst.exception.InvalidExpressionException;
+import com.mdorst.exception.UnrecognizedSymbolError;
 import com.mdorst.util.TestRunner;
 
 public class Main {
@@ -10,11 +11,16 @@ public class Main {
 
     public static void main(String[] args) {
         test.verbose = true;
-        shouldThrow("+", InvalidExpressionException.class);
         test("2 + 3", 5);
         test("5 * 3 + 2 * 8", 31);
         test("a = 5", 5);
         test("a", 5);
+        shouldThrow("+", InvalidExpressionException.class);
+        shouldThrow("2 * 3 *", InvalidExpressionException.class);
+        shouldThrow("= 2", InvalidExpressionException.class);
+        shouldThrow("= = 2", InvalidExpressionException.class);
+        shouldThrow("2 * 3#", UnrecognizedSymbolError.class);
+        shouldThrow("== 2", UnrecognizedSymbolError.class);
         test.done();
     }
 
