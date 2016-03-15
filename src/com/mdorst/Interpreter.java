@@ -93,8 +93,8 @@ public class Interpreter {
             operators.add("*", new Operator(2, (op1, op2) -> new Token(op1.value * op2.value)));
             operators.add("/", new Operator(2, (op1, op2) -> new Token(op1.value / op2.value)));
             operators.add("=", new Operator(0, (Token op1, Token op2) -> {
-                symbols.add(op1.name, op2.value);
-                return new Token(op2.value);
+                symbols.add(op1.name, op2.value());
+                return new Token(op2.value());
             }));
         }
     }
