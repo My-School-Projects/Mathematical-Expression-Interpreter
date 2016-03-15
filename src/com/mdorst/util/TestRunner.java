@@ -33,13 +33,17 @@ public class TestRunner {
 
     public void expect(boolean assertion, String expectation) {
         if (assertion) {
-            stream.print(Color.GREEN + "." + Color.RESET);
-            if (verbose)
-                log.add(Color.GREEN + expectation + Color.RESET);
-            passCount++;
+            pass(expectation);
         } else {
             fail(expectation);
         }
+    }
+
+    public void pass(String result) {
+        stream.print(Color.GREEN + "." + Color.RESET);
+        if (verbose)
+            log.add(Color.GREEN + result + Color.RESET);
+        passCount++;
     }
 
     public void fail(String failure) {
