@@ -4,7 +4,7 @@ import com.mdorst.container.hash.HashMap;
 import com.mdorst.container.list.LinkedList;
 import com.mdorst.container.list.Queue;
 import com.mdorst.container.list.Stack;
-import com.mdorst.exception.InvalidExpressionException;
+import com.mdorst.exception.SyntaxError;
 import com.mdorst.exception.UnrecognizedSymbolError;
 
 import java.util.StringTokenizer;
@@ -104,7 +104,7 @@ public class Interpreter {
      * @param expression The expression to be interpreted
      * @return The result of the expression
      */
-    public double interpret(String expression) throws InvalidExpressionException {
+    public double interpret(String expression) throws SyntaxError {
         LinkedList<Token> expr = new LinkedList<>();
         /**
          * Tokenize the expression
@@ -172,7 +172,7 @@ public class Interpreter {
              * An exception will be thrown.
              */
             if (!postfix.isEmpty() && eval.size() < 2) {
-                throw new InvalidExpressionException(expression + " is not a valid expression");
+                throw new SyntaxError(expression + " is not a valid expression");
             }
             /**
              * While there is more than one operand on the eval stack,

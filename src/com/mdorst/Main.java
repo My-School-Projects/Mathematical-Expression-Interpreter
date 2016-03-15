@@ -1,6 +1,6 @@
 package com.mdorst;
 
-import com.mdorst.exception.InvalidExpressionException;
+import com.mdorst.exception.SyntaxError;
 import com.mdorst.exception.UnrecognizedSymbolError;
 import com.mdorst.util.TestRunner;
 
@@ -15,10 +15,10 @@ public class Main {
         test("5 * 3 + 2 * 8", 31);
         test("a = 5", 5);
         test("a", 5);
-        shouldThrow("+", InvalidExpressionException.class);
-        shouldThrow("2 * 3 *", InvalidExpressionException.class);
-        shouldThrow("= 2", InvalidExpressionException.class);
-        shouldThrow("= = 2", InvalidExpressionException.class);
+        shouldThrow("+", SyntaxError.class);
+        shouldThrow("2 * 3 *", SyntaxError.class);
+        shouldThrow("= 2", SyntaxError.class);
+        shouldThrow("= = 2", SyntaxError.class);
         shouldThrow("2 * 3#", UnrecognizedSymbolError.class);
         shouldThrow("== 2", UnrecognizedSymbolError.class);
         test.done();
@@ -27,7 +27,7 @@ public class Main {
     public static void test(String s, double expectation) {
         try {
             test.assertEqual(interpreter.interpret(s), expectation, s);
-        } catch (InvalidExpressionException e) {
+        } catch (SyntaxError e) {
             test.fail(e.getMessage());
         }
     }
