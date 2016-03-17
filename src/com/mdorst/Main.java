@@ -11,17 +11,17 @@ public class Main {
 
     public static void main(String[] args) {
         test.verbose = true;
-        test("2 + 3", 5);
-        test("5 * 3 + 2 * 8", 31);
+        test("2 + 30", 32);
+        test("5*3+2*8", 31);
         test("a = 5", 5);
         test("a", 5);
-        test("b = a * 3", 15);
+        test("b=a * 3", 15);
         shouldThrow("+", SyntaxError.class);
         shouldThrow("2 * 3 *", SyntaxError.class);
         shouldThrow("= 2", SyntaxError.class);
         shouldThrow("= = 2", SyntaxError.class);
+        shouldThrow("== 2", SyntaxError.class);
         shouldThrow("2 * 3#", UnrecognizedSymbolError.class);
-        shouldThrow("== 2", UnrecognizedSymbolError.class);
         test.done();
     }
 

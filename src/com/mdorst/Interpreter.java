@@ -8,6 +8,8 @@ import com.mdorst.exception.SyntaxError;
 import com.mdorst.exception.UnrecognizedSymbolError;
 
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Interpreter {
 
@@ -110,7 +112,7 @@ public class Interpreter {
          * Tokenize the expression
          */
         {
-            StringTokenizer tokenizer = new StringTokenizer(expression);
+            StringTokenizer tokenizer = new StringTokenizer(expression, "+-*/= \n\t\r\f", true);
             while (tokenizer.hasMoreTokens()) {
                 expr.add(new Token(tokenizer.nextToken()));
             }
@@ -142,7 +144,11 @@ public class Interpreter {
                     postfix.enqueue(opStack.pop());
                 }
                 opStack.push(token);
-            } else {
+            } else
+            /**
+             * Anything else, excluding whitespace
+             */
+            if (!token.name.matches("[ \t\n\r\f]")) {
                 /**
                  * Unrecognized symbol (did not match any recognized pattern)
                  * An exception will be thrown.
