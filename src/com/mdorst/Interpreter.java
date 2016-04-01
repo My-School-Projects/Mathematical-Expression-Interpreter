@@ -142,7 +142,12 @@ public class Interpreter {
                 /**
                  * When an operator is reached, two values are popped from the eval stack.
                  * The operator is applied to them, and the result is pushed onto the eval stack.
+                 *
+                 * If there aren't at least two operands to operate on, there's an error.
                  */
+                if (eval.size() < 2) {
+                    throw new SyntaxError("Expected two operands for operator " + postfix.dequeue().name());
+                }
                 Operator operator = getOperator(postfix.dequeue().name());
                 Token operandR = eval.pop();
                 Token operandL = eval.pop();
