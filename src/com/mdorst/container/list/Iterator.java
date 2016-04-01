@@ -1,21 +1,12 @@
 package com.mdorst.container.list;
 
-/*
- * Iterator
- * - node : Node
- *
- * + next() : T
- * + hasNext() : Boolean
- * # constructor(Node)
- */
-
 /**
  * This class extends java.util.Iterator, and provides facilities
  * for iterating over a linked list.
  *
  * @param <E>
  */
-class Iterator<E> implements java.util.Iterator<E> {
+public class Iterator<E> implements java.util.Iterator<E> {
     private Node<E> node;
     private Node<E> head;
 
