@@ -83,7 +83,7 @@ public class Interpreter {
              */
             else if (token.matches("\\+|-")) {
                 while (!opStack.isEmpty()) {
-                    if (opStack.top().matches("\\*|/"))
+                    if (opStack.top().matches("\\+|-|\\*|/"))
                         postfix.enqueue(new Token(opStack.pop()));
                     else break;
                 }

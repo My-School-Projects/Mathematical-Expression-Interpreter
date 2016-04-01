@@ -16,6 +16,7 @@ public class Main {
         test("a = 5", 5);
         test("a", 5);
         test("b=a * 3", 15);
+        test("c = b - a + 11", 21);
         shouldThrow("+", SyntaxError.class);
         shouldThrow("2 * 3 *", SyntaxError.class);
         shouldThrow("= 2", SyntaxError.class);
