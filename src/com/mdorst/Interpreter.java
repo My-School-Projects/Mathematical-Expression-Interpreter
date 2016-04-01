@@ -118,33 +118,6 @@ public class Interpreter {
         return 0;
     }
 
-    private boolean isOperator(String token) {
-        return token.matches("[\\+\\*-/=]");
-    }
-
-    private class Token {
-        private double _value;
-        private String _name;
-
-        public Token(String name) {
-            _name = name;
-        }
-        public Token(double value) {
-            _value = value;
-        }
-
-        public String name() {
-            return _name;
-        }
-        public double value() {
-            if (_name == null) {
-                return _value;
-            } else {
-                return symbols.get(_name);
-            }
-        }
-    }
-
     Operator getOperator(String token) {
         switch (token) {
             case "+":
