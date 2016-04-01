@@ -17,6 +17,8 @@ public class Main {
         test("a", 5);
         test("b=a * 3", 15);
         test("c = b - a + 11", 21);
+        test("d = sin(0)", 0);
+        test("cos(0)", 1);
         shouldThrow("+", SyntaxError.class);
         shouldThrow("2 * 3 *", SyntaxError.class);
         shouldThrow("= 2", SyntaxError.class);
@@ -31,6 +33,8 @@ public class Main {
             test.assertEqual(interpreter.interpret(s), expectation, s);
         } catch (SyntaxError e) {
             test.fail(e.getMessage());
+        } catch (Throwable e) {
+            test.fail(s + " threw " + e.getClass().toString().substring(6));
         }
     }
 
