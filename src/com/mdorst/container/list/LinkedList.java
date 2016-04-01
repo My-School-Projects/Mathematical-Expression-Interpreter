@@ -72,7 +72,7 @@ public class LinkedList<E> implements Iterable<E> {
      * if it is present.
      *
      * @param o the element to be removed, if present
-     * @return {@code true} if an element was removed as a result of this call
+     * @return {@code true} if an element was removed
      */
     public boolean remove(Object o) {
         for (Node<E> n = head.next; n != head; n = n.next) {
@@ -87,6 +87,19 @@ public class LinkedList<E> implements Iterable<E> {
             }
         }
         return false;
+    }
+
+    /**
+     * Removes all instances of the specified element from the list.
+     *
+     * @param o the element to be removed
+     * @return {@code true} if one or more elements were removed
+     */
+    public boolean removeAll(Object o) {
+        boolean modified = false;
+        if (remove(o)) modified = true;
+        while (remove(o));
+        return modified;
     }
 
     /**
