@@ -17,13 +17,18 @@ public class Token {
     public double value() {
         return value;
     }
-    public boolean isValue() {
-        return name == null;
-    }
     public boolean isOperator() {
         return name != null && name.matches("[\\+\\*-/=]");
     }
     public boolean isVariable() {
-        return name != null && !name.matches("([a-z]|[A-Z]|_)\\w*");
+        return name != null && name.matches("([a-z]|[A-Z]|_)\\w*");
+    }
+
+    public String toString() {
+        if (name == null) {
+            return Double.toString(value);
+        } else {
+            return name;
+        }
     }
 }

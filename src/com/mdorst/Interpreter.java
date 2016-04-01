@@ -115,26 +115,73 @@ public class Interpreter {
          * Evaluate postfix expression
          */
         Stack<Token> eval = new Stack<>();
-        return 0;
+        while (!postfix.isEmpty()) {
+            /**
+             * If a token is not an operator, then it is either a variable or a numeric literal.
+             * Variables and numeric literals are automatically pushed to eval stack.
+             */
+            if (!postfix.front().isOperator()) {
+                eval.push(postfix.dequeue());
+                /**
+                 * If a variable was pushed, look up its value and convert it to
+                 * a value token UNLESS it is the only token on the eval stack, (which means it is the
+                 * variable being assigned to, and needs to remain a variable).
+                 */
+                if (eval.size() > 1 && eval.top().isVariable()) {
+                    Double value = symbols.get(eval.pop().name());
+                    /**
+                     * If value is null, the variable was not found in the symbol table
+                     */
+                    if (value == null) {
+                        throw new UnrecognizedSymbolError("Error: Variables cannot be used before they are assigned");
+                    }
+                    eval.push(new Token(value));
+                }
+            }
+            else {
+                /**
+                 * When an operator is reached, two values are popped from the eval stack.
+                 * The operator is applied to them, and the result is pushed onto the eval stack.
+                 */
+                Operator operator = getOperator(postfix.dequeue().name());
+                Token operandR = eval.pop();
+                Token operandL = eval.pop();
+                double result = operator.call(operandL, operandR);
+                eval.push(new Token(result));
+            }
+        }
+        if (eval.top().isVariable()) {
+            return symbols.get(eval.pop().name());
+        } else {
+            return eval.pop().value();
+        }
     }
 
+    /**
+     * Returns a function which, when called on two operands, applies the appropriate operation to them
+     * @param token The string representation of the operator, eg. "+" or "*"
+     * @return a function which implements the appropriate operation
+     */
     Operator getOperator(String token) {
         switch (token) {
             case "+":
-                return (op1, op2) -> op1 + op2;
+                return (op1, op2) -> op1.value() + op2.value();
             case "-":
-                return (op1, op2) -> op1 - op2;
+                return (op1, op2) -> op1.value() - op2.value();
             case "*":
-                return (op1, op2) -> op1 * op2;
+                return (op1, op2) -> op1.value() * op2.value();
             case "/":
-                return (op1, op2) -> op1 = op2;
+                return (op1, op2) -> op1.value() / op2.value();
             case "=":
-                return (op1, op2) -> 0; //TODO
+                return (op1, op2) -> {
+                    symbols.add(op1.name(), op2.value());
+                    return op2.value();
+                };
         }
         return null;
     }
 
     private interface Operator {
-        public double call(double op1, double op2);
+        double call(Token op1, Token op2);
     }
 }
