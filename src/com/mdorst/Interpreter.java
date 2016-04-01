@@ -33,6 +33,14 @@ public class Interpreter {
             }
         }
         /**
+         * Remove whitespace tokens
+         */
+        expr.removeAll(" ");
+        expr.removeAll("\t");
+        expr.removeAll("\n");
+        expr.removeAll("\r");
+        expr.removeAll("\f");
+        /**
          * Create postfix expression
          */
         Stack<String> opStack = new Stack<>();
@@ -107,9 +115,9 @@ public class Interpreter {
                 }
             }
             /**
-             * Anything else, excluding whitespace
+             * Anything else
              */
-            else if (!token.matches("[ \t\n\r\f]")) {
+            else {
                 /**
                  * Unrecognized symbol (did not match any recognized pattern)
                  * An exception will be thrown.
