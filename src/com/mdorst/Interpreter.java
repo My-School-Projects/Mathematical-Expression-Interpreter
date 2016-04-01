@@ -44,15 +44,24 @@ public class Interpreter {
              */
             if (token.matches("([a-z]|[A-Z]|_)\\w*")) {
                 postfix.enqueue(new Token(token));
-            } else
+            }
             /**
              * Numeric literals:
              * Always get pushed to the postfix expression
              */
-            if (token.matches("\\d+")) {
+            else if (token.matches("\\d+")) {
                 postfix.enqueue(new Token(Double.valueOf(token)));
             }
+            /**
+             * Operators:
+             */
             else if (token.equals("=")) {
+                /**
+                 * Operator =
+                 * Only valid if it's the first operator found.
+                 * Otherwise it's an error (there cannot be operators
+                 * on the left hand side of an assignment).
+                 */
                 if (opStack.isEmpty()) {
                     opStack.push("=");
                 } else {
@@ -60,6 +69,10 @@ public class Interpreter {
                     throw new SyntaxError("Cannot assign to the expression " + e);
                 }
             }
+            /**
+             * Operators + and -
+             *
+             */
             else if (token.matches("\\+|-")) {
                 while (!opStack.isEmpty()) {
                     if (opStack.top().matches("\\*|/"))
