@@ -31,4 +31,9 @@ public class Token {
             return name;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return this.toString().equals(o.toString());
+    }
 }
