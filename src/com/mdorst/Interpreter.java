@@ -65,7 +65,7 @@ public class Interpreter {
              */
             else if (token.equals("=")) {
                 /**
-                 * Operator =
+                 * BinaryOperator =
                  * Only valid if it's the first operator found.
                  * Otherwise it's an error (there cannot be operators
                  * on the left hand side of an assignment).
@@ -169,7 +169,7 @@ public class Interpreter {
                 if (eval.size() < 2) {
                     throw new SyntaxError("Expected two operands for operator " + postfix.dequeue().name());
                 }
-                Operator operator = getOperator(postfix.dequeue().name());
+                BinaryOperator operator = getBinaryOperator(postfix.dequeue().name());
                 Token operandR = eval.pop();
                 Token operandL = eval.pop();
                 double result = operator.call(operandL, operandR);
@@ -184,11 +184,11 @@ public class Interpreter {
     }
 
     /**
-     * Returns a function which, when called on two operands, applies the appropriate operation to them
+     * Returns a {@code BinaryOperator} which, when called on two operands, applies the appropriate operation to them
      * @param token The string representation of the operator, eg. "+" or "*"
-     * @return a function which implements the appropriate operation
+     * @return a {@code BinaryOperator} which implements the appropriate operation
      */
-    Operator getOperator(String token) {
+    BinaryOperator getBinaryOperator(String token) {
         switch (token) {
             case "+":
                 return (op1, op2) -> op1.value() + op2.value();
@@ -207,7 +207,38 @@ public class Interpreter {
         return null;
     }
 
-    private interface Operator {
+    /**
+     * Returns a {@code UnaryOperator} which, when called on one operand, applies the appropriate operation to it
+     * @param token The string representation of the operator, eg. "sin" or "abs"
+     * @return a {@code UnaryOperator} which implements the appropriate operation
+     */
+    UnaryOperator getUnaryOperator(String token) {
+        switch (token) {
+            case "sin":
+                return operand -> Math.sin(operand.value());
+            case "cos":
+                return operand -> Math.cos(operand.value());
+            case "tan":
+                return operand -> Math.tan(operand.value());
+            case "cot":
+                return operand -> 1.0 / Math.tan(operand.value());
+            case "sec":
+                return operand -> 1.0 / Math.cos(operand.value());
+            case "csc":
+                return operand -> 1.0 / Math.sin(operand.value());
+            case "abs":
+                return operand -> Math.abs(operand.value());
+            case "sqrt":
+                return operand -> Math.sqrt(operand.value());
+        }
+        return null;
+    }
+
+    private interface BinaryOperator {
         double call(Token op1, Token op2);
+    }
+
+    private interface UnaryOperator {
+        double call(Token operand);
     }
 }
