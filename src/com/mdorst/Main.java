@@ -32,7 +32,7 @@ public class Main {
         try {
             test.assertEqual(interpreter.interpret(s), expectation, s);
         } catch (SyntaxError e) {
-            test.fail(e.getMessage());
+            test.fail(s + " threw " + e.getClass().toString().substring(6) + "\n" + e.getMessage());
         } catch (Throwable e) {
             test.fail(s + " threw " + e.getClass().toString().substring(6));
         }

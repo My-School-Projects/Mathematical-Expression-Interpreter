@@ -18,6 +18,12 @@ public class Token {
         return value;
     }
     public boolean isOperator() {
+        return isUnaryOperator() || isBinaryOperator();
+    }
+    public boolean isUnaryOperator() {
+        return name != null && name.matches("sin|cos|tan|cot|sec|csc|abs|sqrt");
+    }
+    public boolean isBinaryOperator() {
         return name != null && name.matches("[\\+\\*-/=]");
     }
     public boolean isVariable() {

@@ -27,7 +27,7 @@ public class Interpreter {
          * Tokenize the expression
          */
         {
-            StringTokenizer tokenizer = new StringTokenizer(expression, "+-*/= \n\t\r\f", true);
+            StringTokenizer tokenizer = new StringTokenizer(expression, "+-*/=() \n\t\r\f", true);
             while (tokenizer.hasMoreTokens()) {
                 expr.add(tokenizer.nextToken());
             }
@@ -47,10 +47,17 @@ public class Interpreter {
         Queue<Token> postfix = new Queue<>();
         for (String token : expr) {
             /**
+             * Unary operators:
+             * Always pushed to the opStack (highest priority)
+             */
+            if (token.matches("sin|cos|tan|cot|sec|csc|abs|sqrt")) {
+                opStack.push(token);
+            }
+            /**
              * Variables:
              * Always get pushed to the postfix expression
              */
-            if (token.matches("([a-z]|[A-Z]|_)\\w*")) {
+            else if (token.matches("([a-z]|[A-Z]|_)\\w*")) {
                 postfix.enqueue(new Token(token));
             }
             /**
@@ -61,7 +68,7 @@ public class Interpreter {
                 postfix.enqueue(new Token(Double.valueOf(token)));
             }
             /**
-             * Operators:
+             * Binary operators:
              */
             else if (token.equals("=")) {
                 /**
@@ -107,7 +114,7 @@ public class Interpreter {
                 /**
                  * Unstack until "(" is found
                  */
-                while (!opStack.isEmpty() && opStack.top() != "(") {
+                while (!opStack.isEmpty() && !opStack.top().equals("(")) {
                     postfix.enqueue(new Token(opStack.pop()));
                 }
                 if (!opStack.pop().equals("(")) {
@@ -159,9 +166,24 @@ public class Interpreter {
                     eval.push(new Token(value));
                 }
             }
+            else if (postfix.front().isUnaryOperator()) {
+                /**
+                 * When a unary operator is reached, one value is popped from the eval stack.
+                 * The operator is applied to it, and the result is pushed onto the eval stack.
+                 *
+                 * If there isn't at least one operand to operate on, there's an error.
+                 */
+                if (eval.size() < 1) {
+                    throw new SyntaxError("Expected an operand for operator " + postfix.dequeue().name());
+                }
+                UnaryOperator operator = getUnaryOperator(postfix.dequeue().name());
+                Token operand = eval.pop();
+                double result = operator.call(operand);
+                eval.push(new Token(result));
+            }
             else {
                 /**
-                 * When an operator is reached, two values are popped from the eval stack.
+                 * When a binary operator is reached, two values are popped from the eval stack.
                  * The operator is applied to them, and the result is pushed onto the eval stack.
                  *
                  * If there aren't at least two operands to operate on, there's an error.
