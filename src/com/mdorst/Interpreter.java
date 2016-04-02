@@ -1,6 +1,7 @@
 package com.mdorst;
 
 import com.mdorst.container.hash.HashMap;
+import com.mdorst.container.list.Iterator;
 import com.mdorst.container.list.LinkedList;
 import com.mdorst.container.list.Queue;
 import com.mdorst.container.list.Stack;
@@ -27,19 +28,33 @@ public class Interpreter {
          * Tokenize the expression
          */
         {
+            LinkedList<String> tokenList = new LinkedList<>();
             StringTokenizer tokenizer = new StringTokenizer(expression, "+-*/=() \n\t\r\f", true);
             while (tokenizer.hasMoreTokens()) {
-                expr.add(tokenizer.nextToken());
+                tokenList.add(tokenizer.nextToken());
+            }
+            /**
+             * Remove whitespace tokens
+             */
+            tokenList.removeAll(" ");
+            tokenList.removeAll("\t");
+            tokenList.removeAll("\n");
+            tokenList.removeAll("\r");
+            tokenList.removeAll("\f");
+            /**
+             * Add "+" before "-" anywhere where "-" is not a unary operator
+             */
+            Iterator<String> i = tokenList.iterator();
+            String previous = "a";
+            while (i.hasNext()) {
+                String token = i.next();
+                if (token.equals("-") && !previous.matches("[\\+\\*/=]|\\(|-|sin|cos|tan|cot|sec|csc|abs|sqrt")) {
+                    expr.add("+");
+                }
+                expr.add(token);
+                previous = token;
             }
         }
-        /**
-         * Remove whitespace tokens
-         */
-        expr.removeAll(" ");
-        expr.removeAll("\t");
-        expr.removeAll("\n");
-        expr.removeAll("\r");
-        expr.removeAll("\f");
         /**
          * Create postfix expression
          */
@@ -50,7 +65,7 @@ public class Interpreter {
              * Unary operators:
              * Always pushed to the opStack (highest priority)
              */
-            if (token.matches("sin|cos|tan|cot|sec|csc|abs|sqrt")) {
+            if (token.matches("-|sin|cos|tan|cot|sec|csc|abs|sqrt")) {
                 opStack.push(token);
             }
             /**
@@ -85,12 +100,12 @@ public class Interpreter {
                 }
             }
             /**
-             * Operators + and -
+             * Operator +
              *
              */
-            else if (token.matches("\\+|-")) {
+            else if (token.matches("\\+")) {
                 while (!opStack.isEmpty()) {
-                    if (opStack.top().matches("\\+|-|\\*|/"))
+                    if (opStack.top().matches("-|\\+|\\*|/"))
                         postfix.enqueue(new Token(opStack.pop()));
                     else break;
                 }
@@ -98,7 +113,7 @@ public class Interpreter {
             }
             else if (token.matches("\\*|/")) {
                 while (!opStack.isEmpty()) {
-                    if (opStack.top().matches("\\*|/"))
+                    if (opStack.top().matches("-|\\*|/"))
                         postfix.enqueue(new Token(opStack.pop()));
                     else break;
                 }
@@ -214,8 +229,6 @@ public class Interpreter {
         switch (token) {
             case "+":
                 return (op1, op2) -> op1.value() + op2.value();
-            case "-":
-                return (op1, op2) -> op1.value() - op2.value();
             case "*":
                 return (op1, op2) -> op1.value() * op2.value();
             case "/":
@@ -236,6 +249,8 @@ public class Interpreter {
      */
     UnaryOperator getUnaryOperator(String token) {
         switch (token) {
+            case "-":
+                return operand -> -1 * operand.value();
             case "sin":
                 return operand -> Math.sin(operand.value());
             case "cos":

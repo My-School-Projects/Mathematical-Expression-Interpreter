@@ -19,6 +19,9 @@ public class Main {
         test("c = b - a + 11", 21);
         test("d = sin(0)", 0);
         test("cos(0)", 1);
+        test("var = 5 * (2 + 6)", 40);
+        test("var", 40);
+        test("(2 + 6) * abs(-5)", 40);
         shouldThrow("+", SyntaxError.class);
         shouldThrow("2 * 3 *", SyntaxError.class);
         shouldThrow("= 2", SyntaxError.class);

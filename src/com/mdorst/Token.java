@@ -21,10 +21,10 @@ public class Token {
         return isUnaryOperator() || isBinaryOperator();
     }
     public boolean isUnaryOperator() {
-        return name != null && name.matches("sin|cos|tan|cot|sec|csc|abs|sqrt");
+        return name != null && name.matches("-|sin|cos|tan|cot|sec|csc|abs|sqrt");
     }
     public boolean isBinaryOperator() {
-        return name != null && name.matches("[\\+\\*-/=]");
+        return name != null && name.matches("[\\+\\*/=]");
     }
     public boolean isVariable() {
         return name != null && name.matches("([a-z]|[A-Z]|_)\\w*");
