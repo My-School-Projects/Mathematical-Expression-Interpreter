@@ -1,7 +1,5 @@
-LinkedList    ---   is a   --- java.util.Collection
 LinkedList    --- has many --- Node
 LinkedList    ---   uses   --- Iterator
-Iterator      ---   is a   --- java.util.Iterator
 Iterator      ---   has a  --- Node
 Queue         ---   is a   --- LinkedList
 Stack         ---   is a   --- LinkedList
@@ -28,18 +26,12 @@ LinkedList
  + LinkedList()
  + LinkedList(LinkedList)
  + add(E) : Boolean
- + addAll(Collection) : Boolean
  + clear()
  + contains(Object) : Boolean
- + containsAll(Collection) : Boolean
  + isEmpty() : Boolean
  + iterator() : Iterator
  + remove(Object) : Boolean
- + removeAll(Collection) : Boolean
- + retainAll(Collection) : Boolean
  + size() : Integer
- + toArray() : Object[]
- + toArray(T[]) : T[]
  + toString() : String
  # head : Node
  # size : Integer
@@ -57,3 +49,58 @@ Stack
  + pop() : E
  + push(E)
  + top() : E
+
+Key : Generic
+Value: Generic
+
+ Pair
+ + key : Key
+ + value : Value
+
+HashMap
+ - hash : Function
+ - table : List of LinkedList of Pair
+ + add(Key, Value)
+ + get(Key) : Value
+ + reset()
+
+TestRunner
+ - log : List of String
+ - stream : PrintStream
+ - passCount : Integer
+ - failCount : Integer
+ - verbose : Boolean
+ + expect(Boolean, String)
+ + pass(String)
+ + fail(String)
+ + assertEqual(Object, Object, String)
+ + log(String)
+ + done()
+
+Token
+ - value : Double
+ - name : String
+ + name() : String
+ + value() : Double
+ + isOperator() : Boolean
+ + isUnaryOperator : Boolean
+ + isBinaryOperator() : Boolean
+ + isVariable() : Boolean
+ + toString() : String
+ + equals(Object) : Boolean
+
+BinaryOperator
+ + call(Token, Token) : Double
+
+UnaryOperator
+ + call(Token) : Double
+
+Interpreter
+ - symbols : HashMap of Key = String, Value = Double
+ + interpret(String) : Double
+
+Main
+ <<static>> - test : TestRunner
+ <<static>> - interpreter : Interpreter
+ + test(String, Double)
+ + shouldThrow(String, Exception)
