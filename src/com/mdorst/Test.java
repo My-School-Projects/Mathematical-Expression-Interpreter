@@ -4,7 +4,7 @@ import com.mdorst.exception.SyntaxError;
 import com.mdorst.exception.UnrecognizedSymbolError;
 import com.mdorst.util.TestRunner;
 
-public class Main {
+public class Test {
 
     static TestRunner test = new TestRunner();
     static Interpreter interpreter = new Interpreter();
